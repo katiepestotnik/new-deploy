@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Cat
 # from django.http import HttpResponse
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 # Add this cats list below the imports
 # cats = [
@@ -10,6 +11,7 @@ from .models import Cat
 
 
 # Create your views here.
+# view functions
 def home(request):
     return render(request, 'cats/home.html') 
     # return res.render('home.ejs', context)
@@ -24,3 +26,18 @@ def cats_index(request):
 def cats_detail(request, cat_id):
     cat = Cat.objects.get(id=cat_id)
     return render(request, 'cats/detail.html', {'cat': cat})
+
+# class based views
+class CatCreate(CreateView):
+    model = Cat
+    fields = '__all__'
+    # optional 1 way
+    #success_url = '/cats/{cat_id}'
+
+class CatUpdate(UpdateView):
+    model = Cat
+    fields = ['breed', 'description', 'age']
+
+class CatDelete(DeleteView):
+    model = Cat
+    success_url = '/cats'
