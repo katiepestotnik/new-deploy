@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Cat
+from .forms import FeedingForm
 # from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
@@ -25,7 +26,24 @@ def cats_index(request):
 
 def cats_detail(request, cat_id):
     cat = Cat.objects.get(id=cat_id)
-    return render(request, 'cats/detail.html', {'cat': cat})
+    feeding_form = FeedingForm()
+    return render(request, 'cats/detail.html', 
+        {
+            'cat': cat,
+            'feeding_form': feeding_form
+        })
+
+def add_feeding(request, pk):
+    form = FeedingForm(request.POST)
+    # check if the form is 'clean' with proper data and confirm all data returns to the server
+    if form.is_valid():
+        # it saves the data from the FeedingForm, BUT doesnt save it to the database when we use commit=False
+        new_feeding = form.save(commit=False)
+        # this is our Feeding model, so we can still access cat_id column with our form
+        new_feeding.cat_id = pk
+        new_feeding.save() # puts the date, meal, and cat_id into our db
+    return redirect('detail', cat_id=pk)
+
 
 # class based views
 class CatCreate(CreateView):

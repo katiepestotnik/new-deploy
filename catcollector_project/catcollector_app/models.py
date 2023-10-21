@@ -22,7 +22,7 @@ class Cat(models.Model):
         return reverse('detail', kwargs={'cat_id': self.id})
 
 class Feeding(models.Model):
-    date = models.DateField()
+    date = models.DateField('feeding Date')
     meal = models.CharField(
         max_length=1,
         # add the 'choices' field aka our MEALS tuple variable
