@@ -37,6 +37,11 @@ class Feeding(models.Model):
     def __str__(self):
         # syntax for getting our meal visuals get_(Model)_display()
         return f"{self.get_meal_display()} on {self.date}"
+    
+    # reorder our dates so the newest date is first (DESC) the default is (ASC)
+    class Meta:
+        # the default for ASC is just 'date' but we put a '-' in front of the field to reverse the order (DESC)
+        ordering = ['-date']
 
 
 # feeding_first.cat.description
