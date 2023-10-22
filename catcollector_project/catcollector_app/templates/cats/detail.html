@@ -43,8 +43,57 @@
       </tbody>
     </table>
   </div>
-  <!-- New Markup Above -->
 </div>
+<!-- This is all new markup to be added just above the <script> tag -->
+  <hr>
+  <div class="row">
+    <div class="col s6">
+      <h3>{{ cat.name }}'s Toys</h3>
+      {% if cat.toys.count %}
+        {% for toy in cat.toys.all %}
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title">
+                A <span style="color: {{ toy.color }}">{{ toy.color }}</span> {{ toy.name }}
+              </span>
+            </div>
+            <div class="card-action">
+              <a href="{% url 'toys_update' toy.id %}">Edit</a>
+              <a href="{% url 'toys_delete' toy.id %}">Delete</a>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <h5>No Toys 😿</h5>
+      {% endif %}
+    </div>
+    <!-- Available toys will come after this line -->
+    <!-- New Markup Below -->
+<div class="col s6">
+  <h3>Available Toys</h3>
+  {% if toys.count %}
+    {% for toy in toys.all %}
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">
+            A <span style="color: {{ toy.color }}">{{ toy.color }}</span> {{ toy.name }}
+          </span>
+        </div>
+        <div class="card-action">
+          <!-- 'cats/<int:pk>/assoc_toy/<int:toy_pk>/' <-- PK is our first arg cat.id | toy_pk is our second arg toy.id -->
+          <form action="{% url 'assoc_toy' cat.id toy.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn">Add</button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <h5>{{cat.name}} Already Has All Toys Available</h5>
+  {% endif %}
+</div>
+  </div>
+
 <!-- if you need materialize to handle various JS function it requires, put this on base.html -->
 <script>
     // Django form model creates id_field automatically when rendering to HTML
