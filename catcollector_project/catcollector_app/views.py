@@ -1,9 +1,15 @@
 from django.shortcuts import render, redirect
-from .models import Cat, Toy
+from .models import Cat, Toy, Photo
 from .forms import FeedingForm
 # from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
+
+## imports for photo aws
+import uuid
+import boto3
+## to access .env keys
+import os
 
 # Add this cats list below the imports
 # cats = [
@@ -57,6 +63,30 @@ def add_feeding(request, pk):
 def assoc_toy(request, pk, toy_pk):
     Cat.objects.get(id=pk).toys.add(toy_pk)
     return redirect('detail', cat_id=pk)
+#delete toy for specific cat
+def assoc_delete(request, pk, toy_pk):
+    Cat.objects.get(id=pk).toys.remove(toy_pk)
+    return redirect('detail', cat_id=pk)
+
+## add photo view
+def add_photo(request, cat_id):
+    photo_file = request.FILES.get('photo_file', None)
+    print(photo_file)
+    if photo_file:
+        ## make variable to use sdk to talk with aws
+        s3 = boto3.client('s3')
+        key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+        print(f'this is the key {key}')
+        try:
+            bucket = os.environ['S3_BUCKET']
+            s3.upload_fileobj(photo_file, bucket, key)
+            url = f'{os.environ["S3_BASE_URL"]}{bucket}/{key}'
+            Photo.objects.create(url=url, cat_id=cat_id)
+        except Exception as e:
+            print('An error occured uploading file to S3')
+            print(e)
+    return redirect('detail', cat_id=cat_id)
+
 
 # class based views
 class CatCreate(CreateView):
