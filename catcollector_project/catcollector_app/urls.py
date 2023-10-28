@@ -24,5 +24,7 @@ urlpatterns = [
     path('toys/<int:pk>/delete/', views.ToyDelete.as_view(), name='toys_delete'),
     path('cats/<int:pk>/assoc_delete/<int:toy_pk>/', views.assoc_delete, name='assoc_delete'),
     ## url to add photo
-    path('cats/<int:cat_id>/add_photo/', views.add_photo, name='add_photo')
+    path('cats/<int:cat_id>/add_photo/', views.add_photo, name='add_photo'),
+    # sign up route follows accounts/ pattern
+    path('accounts/signup', views.signup, name='signup'),
 ]

@@ -122,6 +122,12 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# add LOGIN_REDIRECT_URL to specify where a successful login should be redirected
+LOGIN_REDIRECT_URL = '/cats/'
+
+# LOGOUT_REDIRECT_URL tells Django where to take the user after they logout rather than the default admin logout page
+LOGOUT_REDIRECT_URL = '/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
