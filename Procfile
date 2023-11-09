@@ -1,1 +1,1 @@
-web: gunicorn catcollector_project.wsgi:catcollector_project
+web: gunicorn --pythonpath catcollector_project catcollector_project.wsgi
